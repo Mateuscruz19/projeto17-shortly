@@ -26,8 +26,6 @@ export async function signUp(req, res) {
 export async function signIn(req, res) {
     const { email, password } = req.body;
 
-
-    try {
         const { rows: users } = await connectionDB.query(
             `SELECT * FROM users WHERE email = $1 `,
             [email]
@@ -45,10 +43,8 @@ export async function signIn(req, res) {
         INSERT INTO sessions (token, "userId") VALUES ($1, $2)`,
             [token, user.id]
             );
-            res.status(200).send({token:token})
-        }      
-    } catch (err) {
-        res.status(401).send(err)
-    }
- 
+            res.status(200).send(token)
+        }  
+
+     res.status(401).send(err)
 }
