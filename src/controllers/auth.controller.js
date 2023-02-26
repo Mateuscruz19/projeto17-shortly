@@ -6,7 +6,7 @@ export async function signUp(req, res) {
     const { name, email, password, confirmPassword } = res.locals.user;
 
     if (password !== confirmPassword) {
-        res.status(409).send("Senhas diferentes")
+        res.status(422).send("Senhas diferentes")
     }
     
     const passwordHash = bcrypt.hashSync(password, 10);
@@ -26,25 +26,29 @@ export async function signUp(req, res) {
 export async function signIn(req, res) {
     const { email, password } = req.body;
 
-    const { rows: users } = await connectionDB.query(
-        `SELECT * FROM users WHERE email = $1 `,
-        [email]
-      );
-    const [user] = users;
 
-    if (!user) {
-        return res.sendStatus(401);
-      }
-
-    if (bcrypt.compareSync(password, user.password)) {
-        const token = uuid();
-        await connectionDB.query(
-          `
-       INSERT INTO sessions (token, "userId") VALUES ($1, $2)`,
-          [token, user.id]
+    try {
+        const { rows: users } = await connectionDB.query(
+            `SELECT * FROM users WHERE email = $1 `,
+            [email]
         );
-        res.status(200).send({token:token})
-      }      
+        const [user] = users;
 
- res.status(401)
+        if (!user) {
+            return res.sendStatus(401);
+        }
+
+        if (bcrypt.compareSync(password, user.password)) {
+            const token = uuid();
+            await connectionDB.query(
+            `
+        INSERT INTO sessions (token, "userId") VALUES ($1, $2)`,
+            [token, user.id]
+            );
+            res.status(200).send({token:token})
+        }      
+    } catch (err) {
+        res.status(401).send(err)
+    }
+ 
 }
