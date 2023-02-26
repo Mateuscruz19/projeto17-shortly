@@ -5,8 +5,8 @@ import { signInBodyValidation, userSchemaValidation} from "../middleware/auth.mi
 const router = Router();
 
 
-router.post("/sign-up", userSchemaValidation, signUp);
-router.post("/sign-in", signInBodyValidation, signIn);
+router.post("/signup", userSchemaValidation, signUp);
+router.post("/signin", signInBodyValidation, signIn);
 
 
 export default router;

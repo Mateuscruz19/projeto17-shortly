@@ -28,7 +28,8 @@ CREATE TABLE public.sessions (
     id integer NOT NULL,
     token text NOT NULL,
     active boolean DEFAULT true NOT NULL,
-    userid integer NOT NULL
+    "userId" integer NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -205,11 +206,11 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: sessions sessions_userid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: sessions sessions_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sessions
-    ADD CONSTRAINT sessions_userid_fkey FOREIGN KEY (userid) REFERENCES public.users(id);
+    ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
 
 
 --

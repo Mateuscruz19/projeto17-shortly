@@ -1,4 +1,4 @@
-import { userSchema } from "../models/auth.schema.js";
+import { userSchema, loginSchema } from "../models/auth.schema.js";
 import bcrypt from "bcrypt";
 import { connectionDB } from "../database/db.js";
 
@@ -25,6 +25,10 @@ export async function userSchemaValidation(req, res, next) {
 
 export async function signInBodyValidation(req, res, next) {
 
+    const {error} = loginSchema.validate(req.body, {abortEarly: false});
+    if (error) {
+      return res.status(422).send(error.details.map(detail => detail.message));
+    }
 
     next();
 }
