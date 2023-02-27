@@ -11,7 +11,7 @@ export async function urlConverter(req, res) {
     try {
         await connectionDB.query(
           `
-        INSERT INTO shortens(url, shorturl, userid)
+        INSERT INTO shortens(url, "shortUrl", "userId")
         VALUES ($1, $2, $3)
       `,
           [url, shortUrl, id]
