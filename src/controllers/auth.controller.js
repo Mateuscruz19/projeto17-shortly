@@ -24,7 +24,7 @@ export async function signUp(req, res) {
 }
 
 export async function signIn(req, res) {
-    const { email, password } = req.body;
+    const { email, password } = res.locals.user;
 
     try {
         const { rows: users } = await connectionDB.query(
@@ -44,7 +44,7 @@ export async function signIn(req, res) {
         INSERT INTO sessions (token, "userId") VALUES ($1, $2)`,
             [token, user.id]
             );
-           return res.status(200).send({token})
+           return res.status(200).send({token:token})
         }  
 
     return res.status(401);

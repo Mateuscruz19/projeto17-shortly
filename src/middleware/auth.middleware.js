@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { connectionDB } from "../database/db.js";
 
 export async function userSchemaValidation(req, res, next) {
+  
     const user = req.body;
 
     const { error } = userSchema.validate(user, { abortEarly: false });
@@ -25,10 +26,16 @@ export async function userSchemaValidation(req, res, next) {
 
 export async function signInBodyValidation(req, res, next) {
 
-    const {error} = loginSchema.validate(req.body, {abortEarly: false});
+    const user = req.body;
+
+    const {error} = loginSchema.validate(user, {abortEarly: false});
+
     if (error) {
-      return res.status(422).send(error.details.map(detail => detail.message));
+      const errors = error.details.map(detail => detail.message);
+      return res.status(422).send(errors);
     }
+
+    res.locals.user = user;
 
     next();
 }
