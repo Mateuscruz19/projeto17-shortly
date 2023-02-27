@@ -46,3 +46,35 @@ export async function getUserById(req, res) {
       return res.status(500).send(error.message);
     }
 }
+
+export async function showShortUrl(req,res) {
+    const { shortUrl } = req.params;
+
+  try {
+    const shortUrlPicked = await connectionDB.query(
+      `
+    SELECT * 
+    FROM shortens 
+    WHERE "shortUrl" = $1`,
+      [shortUrl]
+    );
+    if (shortUrlPicked.rowCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    const [url] = shortUrlPicked.rows;
+
+    await connectionDB.query(
+      `
+    UPDATE shortens
+    SET "views" = "views" + 1
+    WHERE id = $1`,
+      [url.id]
+    );
+
+    res.redirect(url.url);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+}
