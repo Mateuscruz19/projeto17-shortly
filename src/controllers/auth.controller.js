@@ -26,7 +26,7 @@ export async function signUp(req, res) {
 export async function signIn(req, res) {
     const { email, password } = res.locals.user;
 
-    try {
+    
         const { rows: users } = await connectionDB.query(
             `SELECT * FROM users WHERE email = $1 `,
             [email]
@@ -37,7 +37,9 @@ export async function signIn(req, res) {
             return res.sendStatus(401);
         }
 
-        if (bcrypt.compareSync(password, user.password)) {
+        const passwordConfirm = bcrypt.compareSync(password, user.password)
+
+        if (passwordConfirm === true) {
             const token = uuid();
             await connectionDB.query(
             `
@@ -45,11 +47,7 @@ export async function signIn(req, res) {
             [token, user.id]
             );
            return res.status(200).send({token:token})
-        }  
-
-    return res.status(401);
-    } catch (error) {
-        res.status(401).send(error.message);
-    }
+        } 
+        res.sendStatus(401);
        
 }

@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { connectionDB } from "../database/db.js";
 
 export async function userSchemaValidation(req, res, next) {
-  
+
     const user = req.body;
 
     const { error } = userSchema.validate(user, { abortEarly: false });
@@ -27,6 +27,7 @@ export async function userSchemaValidation(req, res, next) {
 export async function signInBodyValidation(req, res, next) {
 
     const user = req.body;
+    const {email,password} = req.body
 
     const {error} = loginSchema.validate(user, {abortEarly: false});
 
