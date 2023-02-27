@@ -5,15 +5,16 @@ export async function whatUser(req, res) {
 
     try {
       const visitResult = await connectionDB.query(
-        `SELECT SUM(s."views") 
+        `SELECT SUM(s."views")
           FROM shortens s 
-          WHERE s."userId" = $1`,
+          WHERE s."userId" = $1
+          `  ,
         [user.id]
       );
       const [visitCount] = visitResult.rows;
   
       const urlsResult = await connectionDB.query(
-        `SELECT * FROM shortens s WHERE s."userId" = $1`,
+        `SELECT s.id,s."shortUrl",s.url,s.views AS "visitCount" FROM shortens s WHERE s."userId" = $1`,
         [user.id]
       );
       const userUrls = urlsResult.rows;

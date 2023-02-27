@@ -78,3 +78,25 @@ export async function showShortUrl(req,res) {
     return res.status(500).send(error.message);
   }
 }
+
+export async function deleteUrl(req,res) {
+    const { id } = req.params;
+    const { user } = res.locals;
+  
+    try {
+      const result = await connectionDB.query(`SELECT * FROM shortens WHERE id = $1`, [id]);
+  
+      if (result.rowCount === 0) return res.sendStatus(404);
+  
+      const [url] = result.rows;
+  
+      if (url.userId !== user.id) return res.sendStatus(401);
+  
+      await connectionDB.query("DELETE FROM shortens WHERE id=$1", [id]);
+  
+      res.sendStatus(204); 
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(error.message);
+    }
+}
