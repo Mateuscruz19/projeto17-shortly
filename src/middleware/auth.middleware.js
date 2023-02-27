@@ -1,5 +1,4 @@
 import { userSchema, loginSchema } from "../models/auth.schema.js";
-import bcrypt from "bcrypt";
 import { connectionDB } from "../database/db.js";
 
 export async function userSchemaValidation(req, res, next) {
