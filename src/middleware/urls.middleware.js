@@ -9,6 +9,7 @@ export async function urlValidation(req, res, next) {
     if(!authorization){
       return res.status(401).send("Falhou");
     }
+
     const token = authorization?.replace("Bearer ", "");
 
     const {error} = urlSchema.validate(req.body, {abortEarly: false});
@@ -18,7 +19,7 @@ export async function urlValidation(req, res, next) {
     }
 
     if(!token) {
-       return res.status(401)
+       return res.status(401).send("Nao achou o token.");
     }
 
     try {
@@ -29,7 +30,7 @@ export async function urlValidation(req, res, next) {
     const [session] = sessions;
 
     if (!session) {
-      return res.status(401);
+      return res.status(401).send("Nao achou a sessão.");
     }
 
     const { rows: users } = await connectionDB.query(
@@ -39,7 +40,7 @@ export async function urlValidation(req, res, next) {
       const [user] = users;
   
       if (!user) {
-        return res.status(401);
+        return res.status(401).send("Nao achou o user.");
       }
 
         res.locals.user = user;
