@@ -27,7 +27,6 @@ export async function userSchemaValidation(req, res, next) {
 export async function signInBodyValidation(req, res, next) {
 
     const user = req.body;
-    const {email,password} = req.body
 
     const {error} = loginSchema.validate(user, {abortEarly: false});
 
