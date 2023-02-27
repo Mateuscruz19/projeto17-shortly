@@ -17,15 +17,16 @@ export async function signUp(req, res) {
         [email, passwordHash, name]
       );
   
-      res.sendStatus(201);
+     return res.sendStatus(201);
     } catch (err) {
-      res.status(422).send(err.message);
+     return res.status(422).send(err.message);
     }
 }
 
 export async function signIn(req, res) {
     const { email, password } = req.body;
 
+    try {
         const { rows: users } = await connectionDB.query(
             `SELECT * FROM users WHERE email = $1 `,
             [email]
@@ -43,8 +44,12 @@ export async function signIn(req, res) {
         INSERT INTO sessions (token, "userId") VALUES ($1, $2)`,
             [token, user.id]
             );
-            res.status(200).send(token)
+           return res.status(200).send(token)
         }  
 
-     res.status(401).send(err)
+    return res.status(401);
+    } catch (error) {
+        res.status(401).send(error.message);
+    }
+       
 }
