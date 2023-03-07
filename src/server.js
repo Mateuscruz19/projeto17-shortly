@@ -14,5 +14,5 @@ app.use(Auth);
 app.use(Urls)
 app.use(User)
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running in port: ${port}`));
